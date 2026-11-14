@@ -5,6 +5,7 @@
 
 ### Improvements
 
+- Improve the performance of undo and redo in large documents.
 - [beta] Optimize regular-expression-based syntax highlighting in large documents.
 
 

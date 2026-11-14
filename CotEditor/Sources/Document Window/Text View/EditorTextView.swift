@@ -177,7 +177,7 @@ final class EditorTextView: NSTextView, CurrentLineHighlighting, MultiCursorEdit
     private var fontObservers: Set<AnyCancellable> = []
     private var windowOpacityObserver: NSKeyValueObservation?
     private var keyStateObservers: [any NSObjectProtocol] = []
-    private var undoObservers: [any NSObjectProtocol] = []
+    private var undoObserver: any NSObjectProtocol?
     
     
     // MARK: Lifecycle
@@ -362,24 +362,20 @@ final class EditorTextView: NSTextView, CurrentLineHighlighting, MultiCursorEdit
                 },
             ]
             
-            // observe undo/redo to correct the color of restored texts
-            self.undoObservers.forEach(NotificationCenter.default.removeObserver)
-            self.undoObservers = if let undoManager = self.undoManager {
-                [NSNotification.Name.NSUndoManagerDidUndoChange, .NSUndoManagerDidRedoChange].map { name in
-                    NotificationCenter.default.addObserver(forName: name, object: undoManager, queue: .main) { [unowned self] _ in
-                        MainActor.assumeIsolated { [unowned self] in
-                            self.normalizeTextColor()
-                        }
+            // observe text edits to correct the color of the text restored by undo/redo
+            self.undoObserver.map(NotificationCenter.default.removeObserver)
+            self.undoObserver = NotificationCenter.default.addObserver(forName: NSTextStorage.willProcessEditingNotification, object: self.textStorage, queue: .main) { [unowned self] _ in
+                MainActor.assumeIsolated { [unowned self] in
+                    if let undoManager = self.undoManager, undoManager.isUndoing || undoManager.isRedoing {
+                        self.normalizeTextColor()
                     }
                 }
-            } else {
-                []
             }
         } else {
             self.keyStateObservers.forEach(NotificationCenter.default.removeObserver)
             self.keyStateObservers.removeAll()
-            self.undoObservers.forEach(NotificationCenter.default.removeObserver)
-            self.undoObservers.removeAll()
+            self.undoObserver.map(NotificationCenter.default.removeObserver)
+            self.undoObserver = nil
             self.windowOpacityObserver = nil
             self.instanceHighlightTask?.cancel()
             self.instanceHighlightTask = nil
@@ -1543,10 +1539,12 @@ final class EditorTextView: NSTextView, CurrentLineHighlighting, MultiCursorEdit
     }
     
     
-    /// Updates the color of the text restored by undo/redo to the current theme color.
+    /// Updates the color of the text in the edited range of the text storage to the current theme color.
     ///
     /// The standard undo operation restores texts with the attributes attached at the time they were removed,
     /// in which the text color can be outdated if the theme has changed since then.
+    ///
+    /// - Note: Call this method only while the text storage is processing editing.
     private func normalizeTextColor() {
         
         guard
@@ -1554,7 +1552,9 @@ final class EditorTextView: NSTextView, CurrentLineHighlighting, MultiCursorEdit
             let textColor = self.theme?.text.color
         else { return }
         
-        textStorage.enumerateAttribute(.foregroundColor, in: textStorage.range) { value, range, _ in
+        assert(!textStorage.editedRange.isNotFound)
+        
+        textStorage.enumerateAttribute(.foregroundColor, in: textStorage.editedRange) { value, range, _ in
             guard value as? NSColor != textColor else { return }
             
             textStorage.addAttribute(.foregroundColor, value: textColor, range: range)
