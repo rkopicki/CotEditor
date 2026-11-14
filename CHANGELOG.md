@@ -3,6 +3,10 @@
 7.2.0-beta.2 (unreleased)
 --------------------------
 
+### Improvements
+
+- [beta] Optimize regular-expression-based syntax highlighting in large documents.
+
 
 
 7.2.0-beta (2026-11-14)

@@ -79,8 +79,7 @@ extension [NestableToken: SyntaxType] {
                         true
                 }
             }
-            .sorted(using: [KeyPathComparator(\.range.location),
-                            KeyPathComparator(\.range.length, order: .reverse)])
+            .sorted { ($0.range.location, -$0.range.length) < ($1.range.location, -$1.range.length) }
         
         guard !positions.isEmpty else { return [:] }
         
