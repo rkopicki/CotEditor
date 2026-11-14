@@ -1839,7 +1839,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zachowanie aplikacji zmieni się dopiero przy drugim kolejnym uruchomieniu."
+            "value" : "Zmiana w działaniu aplikacji zacznie obowiązywać od kolejnego jej uruchomienia."
           }
         },
         "pt" : {
