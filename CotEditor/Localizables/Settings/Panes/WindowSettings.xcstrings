@@ -1192,7 +1192,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wcięcie zawijanej linii o"
+            "value" : "Wcięcie zawijanego wiersza:"
           }
         },
         "pt" : {
@@ -3221,7 +3221,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "sp."
+            "value" : "spacje"
           }
         },
         "pt" : {

@@ -6816,7 +6816,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Czy chcesz konwertować lub reinterpretować ten dokument z użyciem „%@”?"
+            "value" : "Czy chcesz przekonwertować lub zreinterpretować ten dokument z użyciem „%@”?"
           }
         },
         "pt" : {
@@ -14088,7 +14088,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dokument nie mógł zostać reinterpretowany z użyciem kodowania tekstu „%@”."
+            "value" : "Dokument nie mógł zostać zreinterpretowany z użyciem kodowania tekstu „%@”."
           }
         },
         "pt" : {
@@ -19221,7 +19221,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Czy masz pewność, że chcesz odrzucić zmiany i ponownie otworzyć dokument, używając „%@”?"
+            "value" : "Czy na pewno chcesz odrzucić zmiany i ponownie otworzyć dokument z użyciem „%@”?"
           }
         },
         "pt" : {
